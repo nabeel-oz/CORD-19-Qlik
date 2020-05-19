@@ -18,7 +18,7 @@ This repository provides a Qlik Sense app for the CORD-19 dataset. The app combi
 ### Demonstration Video
 This short video provides a demonstration of the solution:
 
-[!YouTube-Thumb](https://youtu.be/5fYWgglx84M)
+[![Demonstration Video](images/YouTube-Thumb.png)](https://youtu.be/5fYWgglx84M)
 
 ## Qlik Sense App
 The Qlik Sense app can be downloaded [here](app/CORD-19-Challenge.qvf). 
