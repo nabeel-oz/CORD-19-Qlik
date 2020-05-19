@@ -13,7 +13,7 @@ The [COVID-19 Open Research Dataset (CORD-19)](https://www.semanticscholar.org/c
 
 COVID-19 research is [growing at an incredible rate](https://www.sciencemag.org/news/2020/05/scientists-are-drowning-covid-19-papers-can-new-tools-keep-them-afloat) and machine intelligence could be crucuial to help find insights in this repository of data.
 
-This repository provides a Qlik Sense app that I have developed on the CORD-19 dataset. The app combines the native search, navigation and interactive capabilities of Qlik Sense, with ML capabilities like Named Entity Recognition and Clustering.
+This repository provides a Qlik Sense app for the CORD-19 dataset. The app combines the native search, navigation and interactive capabilities of Qlik Sense, with ML capabilities like Named Entity Recognition and Clustering. It also provides an automated load process for keeping the app up to date with new research that is being added to the CORD-19 dataset on a weekly basis.
 
 ### Demonstration Video
 This short video provides a demonstration of the solution:
