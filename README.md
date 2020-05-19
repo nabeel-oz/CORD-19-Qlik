@@ -13,11 +13,9 @@ The [COVID-19 Open Research Dataset (CORD-19)](https://www.semanticscholar.org/c
 
 COVID-19 research is [growing at an incredible rate](https://www.sciencemag.org/news/2020/05/scientists-are-drowning-covid-19-papers-can-new-tools-keep-them-afloat) and machine intelligence could be crucuial to help find insights in this repository of data.
 
-This repository provides a Qlik Sense app for the CORD-19 dataset. The app combines the native search, navigation and interactive capabilities of Qlik Sense, with ML capabilities like Named Entity Recognition and Clustering. It also provides an automated load process for keeping the app up to date with new research that is being added to the CORD-19 dataset on a weekly basis.
+This repository provides a Qlik Sense app for the CORD-19 dataset. The app combines the native search, analytics and interactive visualizations of Qlik Sense, with ML capabilities like Named Entity Recognition and Clustering. It also provides an automated load process for keeping the app up to date with new research that is being added to the CORD-19 dataset on a weekly basis.
 
 ### Demonstration Video
-This short video provides a demonstration of the solution:
-
 [![Demonstration Video](images/YouTube-Thumb-01.png)](https://youtu.be/5fYWgglx84M)
 
 ## Qlik Sense App
@@ -28,5 +26,40 @@ A reload of the app requires configuration of the data connections and the QVD f
 The app loads the JSON files for the research papers using Qlik's native REST connector. So a HTTP server hosting these files needs to be prepared and configured in the `Main` section of the app's load script.
 
 ## Approach
-Work in progress.
+This solution is aimed at providing search and analytics on the entire CORD-19 dataset. The focus is on ease of finding COVID-19 related research for a given context, which can be based on dimensions such as the paper's title, authors and abstract. 
 
+### Scope
+This app does not load the full text of each paper. The decision to restrict the text analysis to abstracts was taken as a practical step to reduce app size, load time and resource requirements. However, the approach used in this app can be applied to the full text with minor updates.
+
+### Loading the JSON files
+The JSON files from the CORD-19 dataset were loaded using Qlik's native REST connector which provides capabilities for parsing the JSON and XML documents. However, this connector does not work with local files and requires a REST API to host the source files. 
+
+For this solution, a simple Python HTTP server was setup by executing the following command in the CORD-19 directory.
+```
+python -m http.server
+```
+
+The URL for the server can be provided through the `Main` section in the Qlik Sense app's load script:
+```
+// URL for HTTP Server hosting the JSON files
+// A local HTTP server can be setup by opening a command prompt in a directory and executing the command: python -m http.server
+LET vHTTPServer = 'http://localhost:8000/2020-05-18/document_parses';
+```
+
+### Incremental Loads
+The CORD-19 data is refreshed weekly and research papers may be added or removed. The Qlik Sense app automates the incremental load of data into the app by making use of [QVD files](https://help.qlik.com/en-US/sense/April2020/Subsystems/Hub/Content/Sense_Hub/Scripting/work-with-QVD-files.htm).
+
+The app automatically creates a list of research papers under the `pdf_json` and `pmc_json` directories on the HTTP server. The latest QVD files are then used to extract a set of previously loaded research papers. With these two lists, we can get a set of new research papers, and previously loaded research papers that need not be retained.
+
+Note that changes to the CORD-19 directory structure or naming conventions would require updates to the app as well. The current version of the app caters for breaking changes introduced on 2020-05-12.
+
+### Named Entity Recognition
+The [spaCy](https://spacy.io/) NLP library is used to extract named entities from the abstracts of the research papers. The `en_core_sci_lg` model from [scispaCy](https://allenai.github.io/scispacy/) was selected to perform the Named Entity Recognition (NER) due to its suitability for biomedical data.
+
+The results of the NER are available through the `Biomedical Entity` dimension in the app and can be used to select associated research papers.
+
+### Alternate States
+The final sheet of the app provides advanced search capabilities through the use of [Alternate States](https://help.qlik.com/en-US/sense/April2020/Subsystems/Hub/Content/Sense_Hub/Visualizations/alternate-states-comparative-analysis.htm). This allows for ad-hoc grouping of search terms to find relevant research papers. 
+
+### Clustering
+This solution uses the [HDBSCAN](https://hdbscan.readthedocs.io/en/latest/) library to cluster research papers within the context of a user's selections. The clustering is performed in real-time by the exchange of data between Qlik and Python. This capability requires the [PyTools Server Side Extension](https://github.com/nabeel-oz/qlik-py-tools).
