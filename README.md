@@ -19,7 +19,7 @@ This repository provides a Qlik Sense app for the CORD-19 dataset. The app combi
 [![Demonstration Video](images/YouTube-Thumb-01.png)](https://youtu.be/5fYWgglx84M)
 
 ## Qlik Sense App
-The Qlik Sense app can be downloaded [here](app/CORD-19-Challenge.qvf). 
+The Qlik Sense app can be downloaded [here](https://www.dropbox.com/s/ml8biumnd2b54de/CORD-19-Challenge.qvf?dl=1). 
 
 A reload of the app requires configuration of the data connections and the QVD files provided [here](data). It also requires the [PyTools Server Side Extension](https://github.com/nabeel-oz/qlik-py-tools). 
 
