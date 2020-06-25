@@ -48,13 +48,13 @@ LET vHTTPServer = 'http://localhost:8000/2020-05-22/document_parses/';
 The directory for the document parses also needs to be specified for the incremental load logic. This is controlled by a variable in the `Main` section as well:
 ```
 // Directory for the document parses
-LET vDirectory = 'lib://Data/CORD-19-research-challenge/2020-05-22/document_parses/';
+LET vDirectory = 'lib://Data/CORD-19-research-challenge/2020-05-22';
 ```
 
 ### Incremental Loads
-The CORD-19 data is refreshed weekly and research papers may be added or removed. The Qlik Sense app automates the incremental load of data into the app by making use of [QVD files](https://help.qlik.com/en-US/sense/April2020/Subsystems/Hub/Content/Sense_Hub/Scripting/work-with-QVD-files.htm).
+The CORD-19 data is being refreshed daily and research papers may be added or removed. The Qlik Sense app automates the incremental load of data into the app by making use of [QVD files](https://help.qlik.com/en-US/sense/April2020/Subsystems/Hub/Content/Sense_Hub/Scripting/work-with-QVD-files.htm).
 
-The app automatically creates a list of research papers under the `pdf_json` and `pmc_json` subdirectories under the root directory. The root is specified in the `vDirectory` variable mentioned [above](#loading-the-json-files). The latest QVD files are then used to extract a set of previously loaded research papers. With these two lists, we can get a set of new research papers, and previously loaded research papers that need not be retained. During a reload these file lists are written to the root directory for reference.
+The app automatically creates a list of research papers in the `pdf_json` and `pmc_json` subdirectories under the root directory. The root is specified in the `vDirectory` variable mentioned [above](#loading-the-json-files). The latest QVD files are then used to extract a set of previously loaded research papers. With these two lists, we can get a set of new research papers, and previously loaded research papers that need not be retained. During a reload these file lists are written to the root directory for reference.
 
 Note that changes to the CORD-19 directory structure or naming conventions would require updates to the app as well. The current version of the app caters for breaking changes introduced on 2020-05-12.
 
