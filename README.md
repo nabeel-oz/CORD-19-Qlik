@@ -19,7 +19,7 @@ This repository provides a Qlik Sense app for the CORD-19 dataset. The app combi
 [![Demonstration Video](images/YouTube-Thumb-01.png)](https://youtu.be/5fYWgglx84M)
 
 ## Qlik Sense App
-The Qlik Sense app can be downloaded [here](https://www.dropbox.com/s/ml8biumnd2b54de/CORD-19-Challenge.qvf?dl=1). It is also available on a public Qlik Sense Entperise deployment [here](https://pe.qlik.com/sense/app/ef47734d-c668-42a1-ba4d-112432c923c1/sheet/9404c419-ba69-4eff-863c-660ad9eb4726/state/analysis).
+The Qlik Sense app can be downloaded [here](https://www.dropbox.com/s/ml8biumnd2b54de/CORD-19-Challenge.qvf?dl=1). It is also available on a public Qlik Sense Entperise site [here](https://pe.qlik.com/sense/app/ef47734d-c668-42a1-ba4d-112432c923c1/sheet/9404c419-ba69-4eff-863c-660ad9eb4726/state/analysis).
 
 A reload of the app requires configuration of the data connections and the QVD files provided [here](data). It also requires the [PyTools Server Side Extension](https://github.com/nabeel-oz/qlik-py-tools). 
 
@@ -45,7 +45,7 @@ The URL for the server can be provided through the `Main` section in the Qlik Se
 // A local HTTP server can be setup by opening a command prompt in a directory and executing the command: python -m http.server
 LET vHTTPServer = 'http://localhost:8000/2020-05-22/document_parses/';
 ```
-The directory for the document parses also needs to be specified for the incremental load logic. This is controlled by a variable in the `Main` section as well:
+The directory for the document parses also needs to be specified for the incremental load logic and access to `metadata.csv`. This is controlled by the `vDirectory` variable in the `Main` section:
 ```
 // Directory for the document parses
 LET vDirectory = 'lib://Data/CORD-19-research-challenge/2020-05-22';
@@ -54,12 +54,12 @@ LET vDirectory = 'lib://Data/CORD-19-research-challenge/2020-05-22';
 ### Incremental Loads
 The CORD-19 data is being refreshed daily and research papers may be added or removed. The Qlik Sense app automates the incremental load of data into the app by making use of [QVD files](https://help.qlik.com/en-US/sense/April2020/Subsystems/Hub/Content/Sense_Hub/Scripting/work-with-QVD-files.htm).
 
-The app automatically creates a list of research papers in the `pdf_json` and `pmc_json` subdirectories under the root directory. The root is specified in the `vDirectory` variable mentioned [above](#loading-the-json-files). The latest QVD files are then used to extract a set of previously loaded research papers. With these two lists, we can get a set of new research papers, and previously loaded research papers that need not be retained. During a reload these file lists are written to the root directory for reference.
+The app automatically creates a list of research papers in the `pdf_json` and `pmc_json` subdirectories under the root directory. The root is specified in the `vDirectory` variable mentioned [above](#loading-the-json-files). The latest QVD files are then used to extract a set of previously loaded research papers. With these two lists, we can get a set of new research papers, and previously loaded research papers that need to be retained. During a reload these file lists are written to the `document_parses` directory for reference.
 
 Note that changes to the CORD-19 directory structure or naming conventions would require updates to the app as well. The current version of the app caters for breaking changes introduced on 2020-05-12.
 
 ### Named Entity Recognition
-The [spaCy](https://spacy.io/) NLP library is used to extract named entities from the abstracts of the research papers. The `en_core_sci_lg` model from [scispaCy](https://allenai.github.io/scispacy/) was selected to perform the Named Entity Recognition (NER) due to its suitability for biomedical data.
+The [spaCy](https://spacy.io/) NLP library is used to extract named entities from the titles and abstracts of the research papers. The `en_core_sci_lg` model from [scispaCy](https://allenai.github.io/scispacy/) was selected to perform the Named Entity Recognition (NER) due to its suitability for biomedical data.
 
 The results of the NER are available through the `Biomedical Entity` dimension in the app and can be used to select associated research papers.
 
@@ -67,4 +67,6 @@ The results of the NER are available through the `Biomedical Entity` dimension i
 The final sheet of the app provides advanced search capabilities through the use of [Alternate States](https://help.qlik.com/en-US/sense/April2020/Subsystems/Hub/Content/Sense_Hub/Visualizations/alternate-states-comparative-analysis.htm). This allows for ad-hoc grouping of search terms to find relevant research papers. 
 
 ### Clustering
-This solution uses the [HDBSCAN](https://hdbscan.readthedocs.io/en/latest/) library to cluster research papers within the context of a user's selections. The clustering is performed in real-time by the exchange of data between Qlik and Python. This capability requires the [PyTools Server Side Extension](https://github.com/nabeel-oz/qlik-py-tools).
+This solution uses the [HDBSCAN](https://hdbscan.readthedocs.io/en/latest/) library to cluster research papers within the context of a user's selections. The clusters represent groups of research papers that have a similar frequency of selected biomedical entities in the text (i.e. title and abstract).
+
+The clustering is performed in real-time by the exchange of data between Qlik and Python. This capability requires the [PyTools Server Side Extension](https://github.com/nabeel-oz/qlik-py-tools). 
