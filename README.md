@@ -21,7 +21,7 @@ This repository provides a Qlik Sense app for the CORD-19 dataset. The app combi
 ## Qlik Sense App
 The Qlik Sense app can be downloaded [here](https://www.dropbox.com/s/ml8biumnd2b54de/CORD-19-Challenge.qvf?dl=1). It is also available on a public Qlik Sense Entperise site [here](https://pe.qlik.com/sense/app/ef47734d-c668-42a1-ba4d-112432c923c1/sheet/9404c419-ba69-4eff-863c-660ad9eb4726/state/analysis).
 
-A reload of the app requires configuration of the data connections and the QVD files provided [here](data). It also requires the [PyTools Server Side Extension](https://github.com/nabeel-oz/qlik-py-tools). 
+A reload of the app requires configuration of the data connections and the QVD files provided [here](https://www.dropbox.com/sh/xs8pfcqz7opmhdh/AADb1i0fhtpeCageK8phsgrMa?dl=1). It also requires the [PyTools Server Side Extension](https://github.com/nabeel-oz/qlik-py-tools). 
 
 The app loads the JSON files for the research papers using Qlik's native REST connector. So a HTTP server hosting these files needs to be prepared and configured in the `Main` section of the app's load script.
 
